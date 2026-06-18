@@ -1,0 +1,41 @@
+# # Docker Compose Template
+# ```
+# # version: '3.8'
+# # services:
+# #   service_name:
+# #     image: image_name                                     ==> if you want to pull image or image is already created 
+# #     ports:
+# #       - "8089:8989"
+# #     container_name: mycontainer
+# #     environment:
+# #       POSTGRES_DB: mydb
+# #       POSTGRES_USER: harsh
+# #       POSTGRES_PASSWORD: admin123
+# #     volumes: 
+# #       - ./website:/usr/share/nginx/html                    ==> create mount point in current directly i.e Mounts local directory or 
+# #         /var/lib/mysql                                     ==> Creates a named volume called mysql_data     
+# #     restart: unless-stopped 
+
+# # volumes:
+# #   - mysql_data:                                            ==> colon is must 
+# ```
+
+services:
+  employee_app:
+    build: .
+    image: employee_mgmnt_system:latest
+    container_name: employee_mgmnt_system_container
+    ports:
+      - "9888:80"
+    restart: unless-stopped
+  
+  mysql:
+    image: mysql:8
+    container_name: mysql_container
+    ports: 
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: admin@123
+    
+      
