@@ -1,0 +1,61 @@
+pipeline {
+
+    agent any
+
+    environment {
+        APP_NAME = "employee_mgmnt_system"
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/harshaldhande/My_Projects.git'
+            }
+        }
+
+        stage('Go To Project Directory') {
+            steps {
+                dir('Employee Management System') {
+                    sh 'ls -la'
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                dir('Employee Management System') {
+                    sh 'docker compose build'
+                }
+            }
+        }
+
+        stage('Deploy Containers') {
+            steps {
+                dir('Employee Management System') {
+                    sh '''
+                    docker compose down || true
+                    docker compose up -d
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Running Containers') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment Successful'
+        }
+
+        failure {
+            echo 'Deployment Failed'
+        }
+    }
+}
